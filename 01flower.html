@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fleur moderne</title>
+  <meta name="description" content="Une fleur moderne animée en SVG/CSS, fichier unique prêt à partager." />
+  <style>
+    :root{
+      --hue: 315;            /* teinte de base (peut être modifiée via JS) */
+      --bg: radial-gradient(1200px 800px at 50% 40%, hsl(var(--hue) 40% 12%), hsl(var(--hue) 40% 6%) 60%, #0a0a0a 90%);
+      --petal-1: hsl(var(--hue) 80% 66% / .95);
+      --petal-2: hsl(calc(var(--hue) + 20) 90% 55% / .95);
+      --petal-edge: hsl(calc(var(--hue) - 10) 90% 72% / .9);
+      --center-1: hsl(calc(var(--hue) - 40) 90% 58%);
+      --center-2: hsl(calc(var(--hue) - 60) 90% 50%);
+      --glow: hsl(var(--hue) 90% 65% / .35);
+      --text: #eaeaea;
+      --muted: #b8b8b8;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font: 16px/1.6 system-ui, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji;
+      display:grid; 
+      min-height:100dvh;
+      place-items:center;
+      overflow:hidden;
+    }
+
+    .card{
+      width:min(92vw, 760px);
+      aspect-ratio: 1 / 1.1;
+      background: linear-gradient(180deg, #0c0c0e80, #0b0b0c40);
+      border: 1px solid hsl(var(--hue) 30% 50% / .25);
+      border-radius: 24px;
+      box-shadow: 0 12px 40px #0008, 0 0 120px 20px var(--glow) inset;
+      position:relative;
+      overflow:hidden;
+    }
+
+    header{
+      position:absolute; inset:16px 16px auto 16px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    }
+    header h1{
+      margin:0; font-size: clamp(18px, 3vw, 22px); font-weight:600; letter-spacing:.3px;
+      color:var(--text);
+      text-shadow: 0 1px 0 #000;
+    }
+    .hint{
+      font-size: clamp(12px, 2.2vw, 14px); color:var(--muted);
+      opacity:.9; user-select:none;
+    }
+
+    .scene{
+      position:absolute; inset:0; display:grid; place-items:center;
+      filter: drop-shadow(0 10px 40px var(--glow));
+    }
+
+    /* Décor vague */
+    .blob{
+      position:absolute; width:120vmax; height:120vmax; border-radius:50%;
+      background: radial-gradient(closest-side, hsl(var(--hue) 90% 65% / .12), transparent 60%);
+      mix-blend-mode: screen; opacity:.8; translate:0 10%;
+      animation: float 16s ease-in-out infinite;
+    }
+
+    @keyframes float{ 50%{ translate:0 -4%; } }
+
+    /* Fleur */
+    svg{ width:min(76vmin, 640px); height:auto; overflow:visible; }
+    .flower{ transform-origin: 50% 50%; animation: spin 28s linear infinite; }
+    @keyframes spin{ to{ transform: rotate(360deg); } }
+
+    .petal{
+      transform-origin: 0 0;
+      filter: drop-shadow(0 2px 6px #0009);
+    }
+
+    .petal path{ 
+      fill: url(#petalGradient);
+      stroke: var(--petal-edge);
+      stroke-width: .9;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .center circle{ filter: drop-shadow(0 0 18px var(--glow)); }
+
+    /* petit bouton discret */
+    .controls{
+      position:absolute; inset:auto 16px 16px auto; display:flex; gap:10px;
+    }
+    .btn{
+      appearance:none; border:none; cursor:pointer; padding:10px 14px;
+      border-radius:12px; background: #101013; color:var(--text);
+      border:1px solid hsl(var(--hue) 30% 50% / .25);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 6px 18px #0008, 0 0 0 1px #fff1 inset;
+      transition: transform .15s ease, box-shadow .2s ease;
+      font-weight:600; letter-spacing:.2px;
+    }
+    .btn:hover{ transform: translateY(-1px); box-shadow: 0 10px 24px #000a; }
+    .btn:active{ transform: translateY(0); }
+
+    footer{
+      position:absolute; inset:auto 0 10px 0; text-align:center; font-size:12px; color:var(--muted);
+      opacity:.9; user-select:none;
+    }
+  </style>
+</head>
+<body>
+  <div class="card" role="img" aria-label="Illustration d'une fleur moderne et animée">
+    <header>
+      <h1>Fleur moderne</h1>
+      <div class="hint">Clique pour changer les couleurs ✨</div>
+    </header>
+
+    <div class="scene">
+      <div class="blob" aria-hidden="true"></div>
+      <svg viewBox="-60 -60 120 120" aria-hidden="true" role="presentation">
+        <defs>
+          <radialGradient id="petalGradient" cx="40%" cy="40%" r="70%">
+            <stop offset="0%" stop-color="var(--petal-1)" />
+            <stop offset="100%" stop-color="var(--petal-2)" />
+          </radialGradient>
+          <radialGradient id="core" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stop-color="var(--center-1)" />
+            <stop offset="100%" stop-color="var(--center-2)" />
+          </radialGradient>
+        </defs>
+
+        <!-- Groupe de pétales -->
+        <g class="flower">
+          <!-- 12 pétales, générés à la main pour rester dans un seul fichier -->
+          <!-- Forme de pétale: courbe douce centrée -->
+          <!-- On place chaque pétale à 0, puis on le tourne autour du centre -->
+          
+          <!-- Utilise une forme de base -->
+          <g id="p" class="petal">
+            <path d="M0 0 C 10 -2, 18 -8, 22 -22 C 8 -18, 2 -10, 0 0 Z" />
+          </g>
+
+          <!-- Répétitions avec rotation -->
+          <use href="#p" transform="rotate(0)"/>
+          <use href="#p" transform="rotate(30)"/>
+          <use href="#p" transform="rotate(60)"/>
+          <use href="#p" transform="rotate(90)"/>
+          <use href="#p" transform="rotate(120)"/>
+          <use href="#p" transform="rotate(150)"/>
+          <use href="#p" transform="rotate(180)"/>
+          <use href="#p" transform="rotate(210)"/>
+          <use href="#p" transform="rotate(240)"/>
+          <use href="#p" transform="rotate(270)"/>
+          <use href="#p" transform="rotate(300)"/>
+          <use href="#p" transform="rotate(330)"/>
+
+          <!-- Cœur de la fleur -->
+          <g class="center">
+            <circle cx="0" cy="0" r="9" fill="url(#core)" />
+            <circle cx="0" cy="0" r="11" fill="none" stroke="var(--petal-edge)" stroke-width="1.2" />
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <div class="controls">
+      <button class="btn" id="shuffle" title="Changer les couleurs (Espace)">Nouveau thème</button>
+      <button class="btn" id="pause" title="Mettre l'animation en pause">Pause</button>
+    </div>
+
+    <footer>
+      Fichier unique – SVG & CSS. Partage: <code>index.html</code>
+    </footer>
+  </div>
+
+  <script>
+    const root = document.documentElement;
+    const btnShuffle = document.getElementById('shuffle');
+    const btnPause = document.getElementById('pause');
+    const flower = document.querySelector('.flower');
+
+    function randomHue(){ return Math.floor(Math.random()*360); }
+    function setHue(h){ root.style.setProperty('--hue', h); }
+
+    function shuffle(){ setHue(randomHue()); burst(); }
+
+    // petit "burst" lumineux pour un effet wow
+    function burst(){
+      const b = document.createElement('div');
+      b.style.position='absolute';
+      b.style.inset='0';
+      b.style.pointerEvents='none';
+      b.style.background=`radial-gradient(200px 200px at 50% 50%, rgba(255,255,255,.18), transparent 70%)`;
+      b.style.animation='burst .6s ease-out forwards';
+      document.querySelector('.card').appendChild(b);
+      setTimeout(()=>b.remove(), 620);
+    }
+
+    // animation CSS pour le burst (injectée dynamiquement pour rester compact)
+    const style = document.createElement('style');
+    style.textContent = `@keyframes burst{ from{ opacity:.9; } to{ opacity:0; } }`;
+    document.head.appendChild(style);
+
+    // contrôles
+    btnShuffle.addEventListener('click', shuffle);
+    document.querySelector('.card').addEventListener('click', (e)=>{
+      if(!e.target.closest('.btn')) shuffle();
+    });
+
+    let paused = false;
+    btnPause.addEventListener('click', ()=>{
+      paused = !paused;
+      flower.style.animationPlayState = paused ? 'paused' : 'running';
+      btnPause.textContent = paused ? 'Lecture' : 'Pause';
+      btnPause.title = paused ? "Relancer l'animation" : "Mettre l'animation en pause";
+    });
+
+    // raccourcis clavier
+    window.addEventListener('keydown', (e)=>{
+      if(e.code === 'Space'){ e.preventDefault(); shuffle(); }
+      if(e.key.toLowerCase() === 'p'){ paused = !paused; flower.style.animationPlayState = paused ? 'paused' : 'running'; btnPause.textContent = paused ? 'Lecture' : 'Pause'; }
+    });
+
+    // Thème initial aléatoire
+    setHue(randomHue());
+  </script>
+</body>
+</html>
