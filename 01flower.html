@@ -3,174 +3,176 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Fleur moderne</title>
-  <meta name="description" content="Une fleur moderne animée en SVG/CSS, fichier unique prêt à partager." />
+  <title>Bouquet moderne</title>
+  <meta name="description" content="Bouquet de fleurs moderne animé en SVG/CSS – fichier unique prêt à partager." />
   <style>
     :root{
-      --hue: 315;            /* teinte de base (peut être modifiée via JS) */
-      --bg: radial-gradient(1200px 800px at 50% 40%, hsl(var(--hue) 40% 12%), hsl(var(--hue) 40% 6%) 60%, #0a0a0a 90%);
-      --petal-1: hsl(var(--hue) 80% 66% / .95);
-      --petal-2: hsl(calc(var(--hue) + 20) 90% 55% / .95);
-      --petal-edge: hsl(calc(var(--hue) - 10) 90% 72% / .9);
-      --center-1: hsl(calc(var(--hue) - 40) 90% 58%);
-      --center-2: hsl(calc(var(--hue) - 60) 90% 50%);
-      --glow: hsl(var(--hue) 90% 65% / .35);
-      --text: #eaeaea;
-      --muted: #b8b8b8;
+      --bg: radial-gradient(1400px 900px at 50% 40%, #0e0d12, #0a0a0f 65%, #06060a 100%);
+      --text: #f2f2f2;
+      --muted:#b9b9c2;
+      --leaf: 120 45% 45%; /* HSL pour les feuilles */
+      --stem: 120 40% 35%;
+      --glow: 300 90% 65% / .28;
     }
 
     *{ box-sizing:border-box; }
     html,body{ height:100%; }
     body{
-      margin:0;
-      background:var(--bg);
-      color:var(--text);
-      font: 16px/1.6 system-ui, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji;
-      display:grid; 
-      min-height:100dvh;
-      place-items:center;
-      overflow:hidden;
+      margin:0; background:var(--bg); color:var(--text);
+      font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      display:grid; place-items:center; min-height:100dvh; overflow:hidden;
     }
 
     .card{
-      width:min(92vw, 760px);
-      aspect-ratio: 1 / 1.1;
-      background: linear-gradient(180deg, #0c0c0e80, #0b0b0c40);
-      border: 1px solid hsl(var(--hue) 30% 50% / .25);
-      border-radius: 24px;
-      box-shadow: 0 12px 40px #0008, 0 0 120px 20px var(--glow) inset;
-      position:relative;
-      overflow:hidden;
+      width:min(94vw, 860px); aspect-ratio: 1 / 1.1;
+      background: linear-gradient(180deg, #0f0f16bf, #0b0b12aa);
+      border-radius: 28px; overflow:hidden; position:relative;
+      border:1px solid #ffffff22;
+      box-shadow: 0 20px 60px #0008, 0 0 120px 20px hsl(var(--glow)) inset;
     }
 
-    header{
-      position:absolute; inset:16px 16px auto 16px;
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-    }
-    header h1{
-      margin:0; font-size: clamp(18px, 3vw, 22px); font-weight:600; letter-spacing:.3px;
-      color:var(--text);
-      text-shadow: 0 1px 0 #000;
-    }
-    .hint{
-      font-size: clamp(12px, 2.2vw, 14px); color:var(--muted);
-      opacity:.9; user-select:none;
-    }
+    header{ position:absolute; inset:16px 16px auto 16px; display:flex; gap:12px; align-items:center; justify-content:space-between; }
+    header h1{ margin:0; font-size:clamp(18px,3.2vw,22px); font-weight:700; letter-spacing:.3px; }
+    .hint{ color:var(--muted); font-size:clamp(12px,2.2vw,14px); }
 
-    .scene{
-      position:absolute; inset:0; display:grid; place-items:center;
-      filter: drop-shadow(0 10px 40px var(--glow));
-    }
+    .scene{ position:absolute; inset:0; display:grid; place-items:end center; }
 
-    /* Décor vague */
-    .blob{
-      position:absolute; width:120vmax; height:120vmax; border-radius:50%;
-      background: radial-gradient(closest-side, hsl(var(--hue) 90% 65% / .12), transparent 60%);
-      mix-blend-mode: screen; opacity:.8; translate:0 10%;
-      animation: float 16s ease-in-out infinite;
-    }
+    svg{ width:min(90vmin, 800px); height:auto; overflow:visible; filter: drop-shadow(0 10px 50px hsla(0,0%,100%,.05)); }
 
-    @keyframes float{ 50%{ translate:0 -4%; } }
+    /* Vase et ruban */
+    .vase{ opacity:.9; filter: drop-shadow(0 8px 30px #0007); }
 
-    /* Fleur */
-    svg{ width:min(76vmin, 640px); height:auto; overflow:visible; }
-    .flower{ transform-origin: 50% 50%; animation: spin 28s linear infinite; }
-    @keyframes spin{ to{ transform: rotate(360deg); } }
+    .controls{ position:absolute; inset:auto 16px 16px auto; display:flex; gap:10px; }
+    .btn{ appearance:none; border:none; cursor:pointer; padding:10px 14px; border-radius:12px; background:#12121a; color:var(--text); border:1px solid #ffffff22; backdrop-filter: blur(6px); box-shadow: 0 6px 18px #0008; font-weight:600; letter-spacing:.2px; }
+    .btn:hover{ transform:translateY(-1px); }
 
-    .petal{
-      transform-origin: 0 0;
-      filter: drop-shadow(0 2px 6px #0009);
-    }
+    footer{ position:absolute; inset:auto 0 10px 0; text-align:center; font-size:12px; color:var(--muted); }
 
-    .petal path{ 
-      fill: url(#petalGradient);
-      stroke: var(--petal-edge);
-      stroke-width: .9;
-      vector-effect: non-scaling-stroke;
-    }
+    /* Animations */
+    @keyframes sway { 0%,100%{ transform:rotate(-2deg);} 50%{ transform:rotate(2deg);} }
+    @keyframes spin { to{ transform:rotate(360deg);} }
+    .flower{ transform-box: fill-box; transform-origin: 0 100%; animation: sway 7s ease-in-out infinite; }
+    .head{ transform-origin: 0 0; animation: spin 30s linear infinite; }
 
-    .center circle{ filter: drop-shadow(0 0 18px var(--glow)); }
+    .petal path{ stroke-width:.9; vector-effect: non-scaling-stroke; filter: drop-shadow(0 2px 6px #0009); }
+    .leaf{ fill: hsl(var(--leaf) / .85); stroke: hsl(var(--leaf) / 1); stroke-width:.8; }
+    .stem{ stroke: hsl(var(--stem)); stroke-width:2; fill:none; stroke-linecap:round; }
 
-    /* petit bouton discret */
-    .controls{
-      position:absolute; inset:auto 16px 16px auto; display:flex; gap:10px;
-    }
-    .btn{
-      appearance:none; border:none; cursor:pointer; padding:10px 14px;
-      border-radius:12px; background: #101013; color:var(--text);
-      border:1px solid hsl(var(--hue) 30% 50% / .25);
-      backdrop-filter: blur(6px);
-      box-shadow: 0 6px 18px #0008, 0 0 0 1px #fff1 inset;
-      transition: transform .15s ease, box-shadow .2s ease;
-      font-weight:600; letter-spacing:.2px;
-    }
-    .btn:hover{ transform: translateY(-1px); box-shadow: 0 10px 24px #000a; }
-    .btn:active{ transform: translateY(0); }
-
-    footer{
-      position:absolute; inset:auto 0 10px 0; text-align:center; font-size:12px; color:var(--muted);
-      opacity:.9; user-select:none;
-    }
+    .blob{ position:absolute; width:120vmax; height:120vmax; border-radius:50%;
+      background: radial-gradient(closest-side, #a855f71f, transparent 60%);
+      mix-blend-mode: screen; opacity:.7; translate:0 12%; animation: float 16s ease-in-out infinite; }
+    @keyframes float { 50%{ translate:0 -3%; } }
   </style>
 </head>
 <body>
-  <div class="card" role="img" aria-label="Illustration d'une fleur moderne et animée">
+  <div class="card" role="img" aria-label="Bouquet moderne de plusieurs fleurs animées">
     <header>
-      <h1>Fleur moderne</h1>
+      <h1>Bouquet moderne</h1>
       <div class="hint">Clique pour changer les couleurs ✨</div>
     </header>
 
     <div class="scene">
       <div class="blob" aria-hidden="true"></div>
-      <svg viewBox="-60 -60 120 120" aria-hidden="true" role="presentation">
+      <svg viewBox="-60 -20 120 140" role="presentation" aria-hidden="true">
         <defs>
-          <radialGradient id="petalGradient" cx="40%" cy="40%" r="70%">
-            <stop offset="0%" stop-color="var(--petal-1)" />
-            <stop offset="100%" stop-color="var(--petal-2)" />
+          <!-- Dégradés pétales/centres paramétrables par CSS variables inline sur chaque fleur -->
+          <radialGradient id="petalGrad" cx="40%" cy="40%" r="70%">
+            <stop offset="0%" stop-color="var(--p1)" />
+            <stop offset="100%" stop-color="var(--p2)" />
           </radialGradient>
-          <radialGradient id="core" cx="50%" cy="50%" r="60%">
-            <stop offset="0%" stop-color="var(--center-1)" />
-            <stop offset="100%" stop-color="var(--center-2)" />
+          <radialGradient id="coreGrad" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stop-color="var(--c1)" />
+            <stop offset="100%" stop-color="var(--c2)" />
           </radialGradient>
+
+          <!-- Formes réutilisables -->
+          <g id="petal" class="petal">
+            <path d="M0 0 C 10 -2, 18 -8, 22 -22 C 8 -18, 2 -10, 0 0 Z" fill="url(#petalGrad)" stroke="var(--edge)"/>
+          </g>
+          <g id="flowerHead" class="head">
+            <use href="#petal" transform="rotate(0)"/>
+            <use href="#petal" transform="rotate(30)"/>
+            <use href="#petal" transform="rotate(60)"/>
+            <use href="#petal" transform="rotate(90)"/>
+            <use href="#petal" transform="rotate(120)"/>
+            <use href="#petal" transform="rotate(150)"/>
+            <use href="#petal" transform="rotate(180)"/>
+            <use href="#petal" transform="rotate(210)"/>
+            <use href="#petal" transform="rotate(240)"/>
+            <use href="#petal" transform="rotate(270)"/>
+            <use href="#petal" transform="rotate(300)"/>
+            <use href="#petal" transform="rotate(330)"/>
+            <g class="center">
+              <circle cx="0" cy="0" r="9" fill="url(#coreGrad)" />
+              <circle cx="0" cy="0" r="11" fill="none" stroke="var(--edge)" stroke-width="1.2" />
+            </g>
+          </g>
         </defs>
 
-        <!-- Groupe de pétales -->
-        <g class="flower">
-          <!-- 12 pétales, générés à la main pour rester dans un seul fichier -->
-          <!-- Forme de pétale: courbe douce centrée -->
-          <!-- On place chaque pétale à 0, puis on le tourne autour du centre -->
-          
-          <!-- Utilise une forme de base -->
-          <g id="p" class="petal">
-            <path d="M0 0 C 10 -2, 18 -8, 22 -22 C 8 -18, 2 -10, 0 0 Z" />
+        <!-- Bouquet: 6 fleurs, tailles et positions variées -->
+        <g class="bouquet">
+          <!-- Fleurs (x,y,scale) + couleurs uniques via CSS vars inline -->
+          <g class="flower" transform="translate(-30,60) rotate(-8)" style="--p1:hsl(320 90% 70%);--p2:hsl(300 85% 56%);--edge:hsl(300 90% 72%);--c1:hsl(50 95% 60%);--c2:hsl(35 95% 50%);">
+            <path class="stem" d="M0 0 C 10 -20, 14 -40, 20 -60"/>
+            <path class="leaf" d="M8 -30 C 20 -36, 24 -24, 10 -18 C 8 -20, 7 -24, 8 -30 Z"/>
+            <g transform="translate(20,-60) scale(0.9)">
+              <use href="#flowerHead"/>
+            </g>
           </g>
 
-          <!-- Répétitions avec rotation -->
-          <use href="#p" transform="rotate(0)"/>
-          <use href="#p" transform="rotate(30)"/>
-          <use href="#p" transform="rotate(60)"/>
-          <use href="#p" transform="rotate(90)"/>
-          <use href="#p" transform="rotate(120)"/>
-          <use href="#p" transform="rotate(150)"/>
-          <use href="#p" transform="rotate(180)"/>
-          <use href="#p" transform="rotate(210)"/>
-          <use href="#p" transform="rotate(240)"/>
-          <use href="#p" transform="rotate(270)"/>
-          <use href="#p" transform="rotate(300)"/>
-          <use href="#p" transform="rotate(330)"/>
-
-          <!-- Cœur de la fleur -->
-          <g class="center">
-            <circle cx="0" cy="0" r="9" fill="url(#core)" />
-            <circle cx="0" cy="0" r="11" fill="none" stroke="var(--petal-edge)" stroke-width="1.2" />
+          <g class="flower" transform="translate(-15,64) rotate(-3)" style="--p1:hsl(200 90% 70%);--p2:hsl(220 85% 58%);--edge:hsl(220 90% 72%);--c1:hsl(50 95% 60%);--c2:hsl(35 95% 50%); animation-duration:8s;">
+            <path class="stem" d="M0 0 C 4 -18, 6 -42, 6 -70"/>
+            <path class="leaf" d="M2 -28 C 12 -36, 18 -28, 6 -22 C 4 -24, 3 -26, 2 -28 Z"/>
+            <g transform="translate(6,-70) scale(0.75)">
+              <use href="#flowerHead"/>
+            </g>
           </g>
+
+          <g class="flower" transform="translate(8,62) rotate(4)" style="--p1:hsl(345 90% 72%);--p2:hsl(10 90% 58%);--edge:hsl(0 90% 70%);--c1:hsl(55 95% 62%);--c2:hsl(38 95% 52%); animation-duration:6.5s;">
+            <path class="stem" d="M0 0 C -2 -26, -2 -46, -4 -74"/>
+            <path class="leaf" d="M-4 -38 C -18 -44, -14 -30, -6 -24 C -6 -28, -5 -33, -4 -38 Z"/>
+            <g transform="translate(-4,-74) scale(0.95)">
+              <use href="#flowerHead"/>
+            </g>
+          </g>
+
+          <g class="flower" transform="translate(24,66) rotate(8)" style="--p1:hsl(265 90% 72%);--p2:hsl(285 90% 58%);--edge:hsl(280 90% 70%);--c1:hsl(55 95% 62%);--c2:hsl(38 95% 52%); animation-duration:7.5s;">
+            <path class="stem" d="M0 0 C -6 -22, -10 -42, -14 -64"/>
+            <path class="leaf" d="M-10 -26 C -28 -32, -18 -20, -8 -18 C -9 -20, -9 -22, -10 -26 Z"/>
+            <g transform="translate(-14,-64) scale(0.7)">
+              <use href="#flowerHead"/>
+            </g>
+          </g>
+
+          <g class="flower" transform="translate(36,62) rotate(12)" style="--p1:hsl(45 95% 66%);--p2:hsl(35 95% 54%);--edge:hsl(35 90% 60%);--c1:hsl(10 90% 58%);--c2:hsl(0 90% 50%); animation-duration:8.2s;">
+            <path class="stem" d="M0 0 C -4 -16, -2 -42, 0 -70"/>
+            <path class="leaf" d="M-2 -30 C -10 -40, -14 -28, -4 -22 C -4 -24, -3 -27, -2 -30 Z"/>
+            <g transform="translate(0,-70) scale(0.85)">
+              <use href="#flowerHead"/>
+            </g>
+          </g>
+
+          <g class="flower" transform="translate(-40,66) rotate(-14)" style="--p1:hsl(165 90% 64%);--p2:hsl(180 90% 54%);--edge:hsl(175 90% 62%);--c1:hsl(55 95% 62%);--c2:hsl(38 95% 52%); animation-duration:9s;">
+            <path class="stem" d="M0 0 C 6 -20, 8 -36, 12 -62"/>
+            <path class="leaf" d="M8 -34 C 18 -40, 22 -28, 10 -20 C 10 -24, 9 -28, 8 -34 Z"/>
+            <g transform="translate(12,-62) scale(0.68)">
+              <use href="#flowerHead"/>
+            </g>
+          </g>
+        </g>
+
+        <!-- Vase en bas -->
+        <g class="vase" transform="translate(0,75)">
+          <path d="M-32 0 C -30 -4, -24 -20, -18 -24 C -10 -30, 10 -30, 18 -24 C 24 -20, 30 -4, 32 0 C 30 10, 20 16, 0 16 C -20 16, -30 10, -32 0 Z" fill="#0f1020aa" stroke="#ffffff22"/>
+          <ellipse cx="0" cy="16" rx="28" ry="4" fill="#0006" />
+          <path d="M-18 -24 C -16 -18, -8 -16, 0 -16 C 8 -16, 16 -18, 18 -24" fill="none" stroke="#ffffff33"/>
         </g>
       </svg>
     </div>
 
     <div class="controls">
-      <button class="btn" id="shuffle" title="Changer les couleurs (Espace)">Nouveau thème</button>
-      <button class="btn" id="pause" title="Mettre l'animation en pause">Pause</button>
+      <button class="btn" id="shuffle" title="Nouvelles couleurs (Espace)">Nouvelles couleurs</button>
+      <button class="btn" id="pause" title="Mettre en pause">Pause</button>
     </div>
 
     <footer>
@@ -179,55 +181,57 @@
   </div>
 
   <script>
-    const root = document.documentElement;
     const btnShuffle = document.getElementById('shuffle');
     const btnPause = document.getElementById('pause');
-    const flower = document.querySelector('.flower');
+    const flowers = [...document.querySelectorAll('.flower')];
 
-    function randomHue(){ return Math.floor(Math.random()*360); }
-    function setHue(h){ root.style.setProperty('--hue', h); }
+    function rand(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+    function randFloat(min,max){ return Math.random()*(max-min)+min; }
 
-    function shuffle(){ setHue(randomHue()); burst(); }
-
-    // petit "burst" lumineux pour un effet wow
-    function burst(){
-      const b = document.createElement('div');
-      b.style.position='absolute';
-      b.style.inset='0';
-      b.style.pointerEvents='none';
-      b.style.background=`radial-gradient(200px 200px at 50% 50%, rgba(255,255,255,.18), transparent 70%)`;
-      b.style.animation='burst .6s ease-out forwards';
-      document.querySelector('.card').appendChild(b);
-      setTimeout(()=>b.remove(), 620);
+    function randomizeFlower(el){
+      const hue = rand(0,359);
+      const hue2 = (hue + rand(10,40)) % 360;
+      const edge = (hue + rand(-10,10)+360)%360;
+      const c = (hue + rand(-80,-40)+360)%360;
+      el.style.setProperty('--p1', `hsl(${hue} 90% 72%)`);
+      el.style.setProperty('--p2', `hsl(${hue2} 90% 58%)`);
+      el.style.setProperty('--edge', `hsl(${edge} 90% 70%)`);
+      el.style.setProperty('--c1', `hsl(${c} 95% 62%)`);
+      el.style.setProperty('--c2', `hsl(${(c-15+360)%360} 95% 52%)`);
+      el.style.animationDuration = `${randFloat(6,9).toFixed(1)}s`;
+      const head = el.querySelector('.head');
+      head.style.animationDuration = `${randFloat(24,36).toFixed(1)}s`;
     }
 
-    // animation CSS pour le burst (injectée dynamiquement pour rester compact)
+    function shuffle(){ flowers.forEach(randomizeFlower); burst(); }
+
+    // burst visuel subtil
+    function burst(){
+      const card = document.querySelector('.card');
+      const b = document.createElement('div');
+      b.style.position='absolute'; b.style.inset='0'; b.style.pointerEvents='none';
+      b.style.background='radial-gradient(200px 200px at 50% 50%, rgba(255,255,255,.18), transparent 70%)';
+      b.style.animation='fade .6s ease-out forwards';
+      card.appendChild(b); setTimeout(()=>b.remove(), 620);
+    }
     const style = document.createElement('style');
-    style.textContent = `@keyframes burst{ from{ opacity:.9; } to{ opacity:0; } }`;
+    style.textContent = `@keyframes fade{ from{ opacity:.9 } to{ opacity:0 } }`;
     document.head.appendChild(style);
 
-    // contrôles
-    btnShuffle.addEventListener('click', shuffle);
-    document.querySelector('.card').addEventListener('click', (e)=>{
-      if(!e.target.closest('.btn')) shuffle();
-    });
-
-    let paused = false;
+    let paused=false;
     btnPause.addEventListener('click', ()=>{
       paused = !paused;
-      flower.style.animationPlayState = paused ? 'paused' : 'running';
+      flowers.forEach(f=> f.style.animationPlayState = paused ? 'paused':'running');
+      document.querySelectorAll('.head').forEach(h=> h.style.animationPlayState = paused ? 'paused':'running');
       btnPause.textContent = paused ? 'Lecture' : 'Pause';
-      btnPause.title = paused ? "Relancer l'animation" : "Mettre l'animation en pause";
     });
 
-    // raccourcis clavier
-    window.addEventListener('keydown', (e)=>{
-      if(e.code === 'Space'){ e.preventDefault(); shuffle(); }
-      if(e.key.toLowerCase() === 'p'){ paused = !paused; flower.style.animationPlayState = paused ? 'paused' : 'running'; btnPause.textContent = paused ? 'Lecture' : 'Pause'; }
-    });
+    btnShuffle.addEventListener('click', shuffle);
+    document.querySelector('.card').addEventListener('click', (e)=>{ if(!e.target.closest('.btn')) shuffle(); });
+    window.addEventListener('keydown', (e)=>{ if(e.code==='Space'){ e.preventDefault(); shuffle(); } });
 
-    // Thème initial aléatoire
-    setHue(randomHue());
+    // Thème initial
+    shuffle();
   </script>
 </body>
 </html>
